@@ -11,7 +11,6 @@
             --accent-color: #3498db;
         }
 
-        /* 加载动画 */
         .loader {
             position: fixed;
             top: 0;
@@ -36,27 +35,53 @@
             animation: spin 1s linear infinite;
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes fadeOut { to { opacity: 0; visibility: hidden; } }
+
+        .page-transition {
+            animation: pageIn 0.6s ease-out forwards;
+            opacity: 0;
         }
 
-        @keyframes fadeOut {
-            to { opacity: 0; visibility: hidden; }
+        @keyframes pageIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .click-effect {
+        .hamburger {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 2rem;
             position: absolute;
-            width: 20px;
-            height: 20px;
-            pointer-events: none;
-            animation: lightning 0.6s;
+            right: 1rem;
+            top: 1rem;
+            z-index: 100;
         }
 
-        @keyframes lightning {
-            0% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(2); }
-            100% { opacity: 0; transform: scale(3); }
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 99;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            animation: menuIn 0.3s ease-out;
         }
+
+        @keyframes menuIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .mobile-nav.active { display: flex; }
+        .mobile-nav .nav-button { margin: 1rem 0; font-size: 1.5rem; }
 
         body {
             font-family: 'Segoe UI', sans-serif;
@@ -70,13 +95,6 @@
             color: white;
             padding: 1rem;
             text-align: center;
-            opacity: 0;
-            animation: slideDown 0.8s 1.2s forwards;
-        }
-
-        @keyframes slideDown {
-            from { transform: translateY(-20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
         }
 
         .nav-buttons {
@@ -85,8 +103,6 @@
             justify-content: center;
             padding: 1rem;
             flex-wrap: wrap;
-            opacity: 0;
-            animation: fadeIn 0.8s 1.4s forwards;
         }
 
         .nav-button {
@@ -98,46 +114,14 @@
             transition: transform 0.2s;
             border: none;
             cursor: pointer;
-            position: relative;
-            overflow: hidden;
         }
 
-        .nav-button:hover {
-            transform: translateY(-2px);
-        }
-
-        .nav-button::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 5px;
-            height: 5px;
-            background: rgba(255,255,255,0.5);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            opacity: 0;
-        }
-
-        .nav-button:active::after {
-            animation: ripple 0.4s;
-        }
-
-        @keyframes ripple {
-            0% { width: 5px; height: 5px; opacity: 1; }
-            100% { width: 200px; height: 200px; opacity: 0; }
-        }
+        .nav-button:hover { transform: translateY(-2px); }
 
         .content {
             max-width: 800px;
             margin: 2rem auto;
             padding: 0 1rem;
-            opacity: 0;
-            animation: fadeIn 0.8s 1.6s forwards;
-        }
-
-        @keyframes fadeIn {
-            to { opacity: 1; }
         }
 
         .hitokoto {
@@ -154,6 +138,7 @@
             gap: 2rem;
             justify-content: center;
             margin: 2rem 0;
+            flex-wrap: wrap;
         }
 
         .contact a {
@@ -162,14 +147,11 @@
             gap: 0.5rem;
             color: var(--primary-color);
             text-decoration: none;
-            transition: color 0.3s;
             padding: 10px;
-            position: relative;
+            transition: color 0.3s;
         }
 
-        .contact a:hover {
-            color: var(--accent-color);
-        }
+        .contact a:hover { color: var(--accent-color); }
 
         .modal {
             display: none;
@@ -190,10 +172,6 @@
             to { transform: translate(-50%, -50%); opacity: 1; }
         }
 
-        .modal-content {
-            text-align: center;
-        }
-
         .sponsor-btn {
             background: #e74c3c;
             color: white;
@@ -205,9 +183,7 @@
             transition: background 0.3s;
         }
 
-        .sponsor-btn:hover {
-            background: #c0392b;
-        }
+        .sponsor-btn:hover { background: #c0392b; }
 
         .avatar {
             width: 100px;
@@ -220,9 +196,7 @@
             transform: scale(0);
         }
 
-        @keyframes avatarIn {
-            to { opacity: 1; transform: scale(1); }
-        }
+        @keyframes avatarIn { to { opacity: 1; transform: scale(1); } }
 
         .close-btn {
             background: #e74c3c;
@@ -236,97 +210,115 @@
             margin-top: 1rem;
         }
 
-        .close-btn:hover {
-            background: #c0392b;
-            transform: scale(1.05);
+        .close-btn:hover { background: #c0392b; transform: scale(1.05); }
+
+        .click-effect {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            pointer-events: none;
+            animation: lightning 0.6s;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23FFD700"><path d="M7 2v11h3v9l7-12h-4l4-8H7z"/></svg>');
         }
- .birthday-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.9);
-        z-index: 999;
-        display: none;
-        justify-content: center;
-        align-items: center;
-        color: #fff;
-    }
 
-    .birthday-card {
-        background: linear-gradient(45deg, #2c3e50, #3498db);
-        padding: 2rem;
-        border-radius: 15px;
-        text-align: center;
-        animation: pulse 2s infinite;
-        position: relative;
-    }
+        @keyframes lightning {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(2); }
+            100% { opacity: 0; transform: scale(3); }
+        }
 
-    @keyframes pulse {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.05); }
-        100% { transform: scale(1); }
-    }
+        .birthday-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
 
-    .birthday-close {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        background: none;
-        border: none;
-        color: white;
-        font-size: 1.5rem;
-        cursor: pointer;
-    }
+        .birthday-card {
+            background: linear-gradient(45deg, #2c3e50, #3498db);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            animation: pulse 2s infinite;
+            color: white;
+            position: relative;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .birthday-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .hamburger { display: block; }
+            .nav-buttons { display: none; }
+            .contact { flex-direction: column; }
+            .header h1 { font-size: 1.5rem; }
+        }
     </style>
 </head>
 <body>
     <div class="loader"></div>
 
-    <div class="header">
+    <button class="hamburger" id="hamburger">☰</button>
+    <div class="mobile-nav" id="mobileNav">
+        <a href="https://ai.shandiana.cn" class="nav-button">星辰AI</a>
+        <a href="https://www.rainyun.com/MzA1MTM=_" class="nav-button">站长推荐</a>
+        <a href="https://gxzh.shandiana.cn" class="nav-button">共享账号</a>
+        <button class="nav-button" onclick="showModal()">关于</button>
+    </div>
+
+    <div class="header page-transition">
         <img src="http://q1.qlogo.cn/g?b=qq&nk=2932944216&s=100" alt="头像" class="avatar">
         <h1>闪电的主页</h1>
     </div>
 
-    <div class="nav-buttons">
+    <div class="nav-buttons page-transition">
         <a href="https://ai.shandiana.cn" class="nav-button">星辰AI</a>
         <a href="https://www.rainyun.com/MzA5MTM=_" class="nav-button">站长推荐</a>
         <a href="https://gxzh.shandiana.cn" class="nav-button">共享账号</a>
         <button class="nav-button" onclick="showModal()">关于</button>
     </div>
-   <div class="birthday-overlay" id="birthdayOverlay">
-    <div class="birthday-card">
-        <button class="birthday-close" onclick="closeBirthday()">×</button>
-        <h2 style="font-size: 2.5em;">🎉 闪电生日快乐！ 🎉</h2>
-        <p style="font-size: 1.2em; margin: 1rem 0;">今天是你的特别日子！</p>
-        <div style="font-size: 3em; animation: sparkle 1s infinite;">
-            ⚡🎂⚡
-        </div>
-    </div>
-</div>
-    <div class="content">
-        <div class="hitokoto" id="hitokoto">正在加载每日一言...</div>
 
-        <div class="contact">
-            <a href="http://wpa.qq.com/msgrd?v=3&uin=2932944216&site=qq&menu=yes">
-                <svg t="1737631365687" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4206" width="24" height="24"><path d="M824.8 613.2c-16-51.4-34.4-94.6-62.7-165.3C766.5 262.2 689.3 112 511.5 112 331.7 112 256.2 265.2 261 447.9c-28.4 70.8-46.7 113.7-62.7 165.3-34 109.5-23 154.8-14.6 155.8 18 2.2 70.1-82.4 70.1-82.4 0 49 25.2 112.9 79.8 159-26.4 8.1-85.7 29.9-71.6 53.8 11.4 19.3 196.2 12.3 249.5 6.3 53.3 6 238.1 13 249.5-6.3 14.1-23.8-45.3-45.7-71.6-53.8 54.6-46.2 79.8-110.1 79.8-159 0 0 52.1 84.6 70.1 82.4 8.5-1.1 19.5-46.4-14.5-155.8z" p-id="4207"></path>
-				</svg>
-                QQ
-            </a>
-            <a href="mailto:2932944216@qq.com">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="#2c2c2c">
-                    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-                </svg>
-                邮箱
-            </a>
-            <a href="https://space.bilibili.com/1675718825">
-               <svg t="1737631513977" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5208" width="24" height="24"><path d="M278.8864 148.1728c14.336-8.192 32.6144-9.3696 47.8208-2.6624 11.3664 4.6592 19.968 13.824 29.184 21.6064 38.144 32.9216 75.9808 66.304 114.2784 99.0208h80.4352c38.2976-32.768 76.0832-66.048 114.2272-98.9696 9.2672-7.7824 17.8688-16.896 29.2864-21.6576 14.7456-6.5024 32.4608-5.632 46.592 2.048 16.5888 8.5504 28.1088 26.2656 28.8256 44.9536 1.024 13.568-3.84 27.2896-12.3392 37.7856-7.5264 8.3456-16.5376 15.2064-24.8832 22.6816-5.3248 4.4032-10.1376 9.5232-16.0256 13.2096 23.6544 0 47.2576-0.256 70.912 0.1536 31.1296 0.8192 61.44 14.592 82.8928 37.1712 22.6304 22.2208 35.5328 53.5552 35.4816 85.1968 0.1024 108.4416 0 216.9344 0.0512 325.376-0.1024 16.384 0.8192 33.024-2.816 49.152-6.656 32.9728-28.8256 61.5936-56.9856 79.36a121.344 121.344 0 0 1-64.7168 17.7664H263.2704c-16.9984-0.1024-34.2528 0.8704-50.9952-2.8672-32.1024-6.4512-60.0064-27.648-77.824-54.6304a121.088 121.088 0 0 1-19.2512-66.9696v-321.536c0.1024-16.5376-0.9216-33.1776 2.4576-49.408 10.24-52.9408 58.9312-96.1024 112.9984-98.4576 24.6272-0.768 49.3056-0.2048 73.9328-0.3072-11.6224-8.3968-21.8112-18.5344-32.768-27.7504a55.04 55.04 0 0 1-20.5312-45.9264c0.7168-18.2272 11.6736-35.584 27.648-44.3392m-13.056 221.7984c-20.992 3.7376-38.912 20.3264-44.7488 40.7552a76.4928 76.4928 0 0 0-2.3552 21.7088c0.1024 89.0368-0.0512 178.0736 0.0512 267.1616-0.4096 24.2176 16.3328 47.1552 39.1168 54.8864 8.1408 2.9696 16.896 3.0208 25.3952 3.072 153.1904-0.1024 306.432 0.0512 459.6224-0.0512 22.4768 0.8704 44.0832-13.1072 53.5552-33.28 5.7856-11.5712 5.6832-24.7296 5.4784-37.376v-248.832c0-9.1136 0.3072-18.4832-2.304-27.2896a58.7776 58.7776 0 0 0-36.864-38.656c-9.7792-3.584-20.4288-3.0208-30.6688-3.072H292.5056c-8.8576 0-17.8176-0.3072-26.624 0.9728z" fill="#2c2c2c" p-id="5209"></path><path d="M358.7072 455.5264c14.6432-1.4848 29.8496 3.2768 41.0112 12.8 12.4416 10.24 19.5584 26.112 19.7632 42.1376 0.3584 19.4048 0.1024 38.8608 0.1024 58.2656 0 12.8-3.3792 25.8048-11.3152 35.9424a54.9888 54.9888 0 0 1-48.4864 21.76 54.9376 54.9376 0 0 1-44.032-28.2624c-6.8096-11.6736-7.3728-25.4976-7.168-38.6048 0.4096-18.8416-1.024-37.7856 0.8704-56.576a55.296 55.296 0 0 1 49.2544-47.4624z m292.4544 0a55.2448 55.2448 0 0 1 60.7232 53.0432c0.8192 18.2272 0.1024 36.4544 0.4096 54.6816 0.1024 12.8-1.4336 26.112-8.4992 37.12-10.24 17.0496-30.3104 27.5456-50.176 26.112a55.04 55.04 0 0 1-43.3664-24.9856c-7.936-11.776-9.472-26.2656-9.1136-40.0896 0.3584-18.7392-0.6656-37.4784 0.6144-56.1664 1.8432-25.6 23.9104-47.5136 49.408-49.664z" fill="#2c2c2c" p-id="5210"></path></svg></svg>
-                哔哩哔哩
-            </a>
-        </div>
-    </div>
-
+<div class="contact">
+    <a href="http://wpa.qq.com/msgrd?v=3&uin=2932944216&site=qq&menu=yes">
+        <svg width="24" height="24" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+            <path d="M824.8 613.2c-16-51.4-34.4-94.6-62.7-165.3C766.5 262.2 689.3 112 511.5 112 331.7 112 256.2 265.2 261 447.9c-28.4 70.8-46.7 113.7-62.7 165.3-34 109.5-23 154.8-14.6 155.8 18 2.2 70.1-82.4 70.1-82.4 0 49 25.2 112.9 79.8 159-26.4 8.1-85.7 29.9-71.6 53.8 11.4 19.3 196.2 12.3 249.5 6.3 53.3 6 238.1 13 249.5-6.3 14.1-23.8-45.3-45.7-71.6-53.8 54.6-46.2 79.8-110.1 79.8-159 0 0 52.1 84.6 70.1 82.4 8.5-1.1 19.5-46.4-14.5-155.8z" fill="currentColor"></path>
+        </svg>
+        QQ
+    </a>
+    <a href="mailto:2932944216@qq.com">
+        <svg width="24" height="24" viewBox="0 0 24 24">
+            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" fill="currentColor"/>
+        </svg>
+        邮箱
+    </a>
+    <a href="https://space.bilibili.com/1675718825">
+        <svg width="24" height="24" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+            <path d="M278.8864 148.1728c14.336-8.192 32.6144-9.3696 47.8208-2.6624 11.3664 4.6592 19.968 13.824 29.184 21.6064 38.144 32.9216 75.9808 66.304 114.2784 99.0208h80.4352c38.2976-32.768 76.0832-66.048 114.2272-98.9696 9.2672-7.7824 17.8688-16.896 29.2864-21.6576 14.7456-6.5024 32.4608-5.632 46.592 2.048 16.5888 8.5504 28.1088 26.2656 28.8256 44.9536 1.024 13.568-3.84 27.2896-12.3392 37.7856-7.5264 8.3456-16.5376 15.2064-24.8832 22.6816-5.3248 4.4032-10.1376 9.5232-16.0256 13.2096 23.6544 0 47.2576-0.256 70.912 0.1536 31.1296 0.8192 61.44 14.592 82.8928 37.1712 22.6304 22.2208 35.5328 53.5552 35.4816 85.1968 0.1024 108.4416 0 216.9344 0.0512 325.376-0.1024 16.384 0.8192 33.024-2.816 49.152-6.656 32.9728-28.8256 61.5936-56.9856 79.36a121.344 121.344 0 0 1-64.7168 17.7664H263.2704c-16.9984-0.1024-34.2528 0.8704-50.9952-2.8672-32.1024-6.4512-60.0064-27.648-77.824-54.6304a121.088 121.088 0 0 1-19.2512-66.9696v-321.536c0.1024-16.5376-0.9216-33.1776 2.4576-49.408 10.24-52.9408 58.9312-96.1024 112.9984-98.4576 24.6272-0.768 49.3056-0.2048 73.9328-0.3072-11.6224-8.3968-21.8112-18.5344-32.768-27.7504a55.04 55.04 0 0 1-20.5312-45.9264c0.7168-18.2272 11.6736-35.584 27.648-44.3392m-13.056 221.7984c-20.992 3.7376-38.912 20.3264-44.7488 40.7552a76.4928 76.4928 0 0 0-2.3552 21.7088c0.1024 89.0368-0.0512 178.0736 0.0512 267.1616-0.4096 24.2176 16.3328 47.1552 39.1168 54.8864 8.1408 2.9696 16.896 3.0208 25.3952 3.072 153.1904-0.1024 306.432 0.0512 459.6224-0.0512 22.4768 0.8704 44.0832-13.1072 53.5552-33.28 5.7856-11.5712 5.6832-24.7296 5.4784-37.376v-248.832c0-9.1136 0.3072-18.4832-2.304-27.2896a58.7776 58.7776 0 0 0-36.864-38.656c-9.7792-3.584-20.4288-3.0208-30.6688-3.072H292.5056c-8.8576 0-17.8176-0.3072-26.624 0.9728z" fill="currentColor"></path>
+            <path d="M358.7072 455.5264c14.6432-1.4848 29.8496 3.2768 41.0112 12.8 12.4416 10.24 19.5584 26.112 19.7632 42.1376 0.3584 19.4048 0.1024 38.8608 0.1024 58.2656 0 12.8-3.3792 25.8048-11.3152 35.9424a54.9888 54.9888 0 0 1-48.4864 21.76 54.9376 54.9376 0 0 1-44.032-28.2624c-6.8096-11.6736-7.3728-25.4976-7.168-38.6048 0.4096-18.8416-1.024-37.7856 0.8704-56.576a55.296 55.296 0 0 1 49.2544-47.4624z m292.4544 0a55.2448 55.2448 0 0 1 60.7232 53.0432c0.8192 18.2272 0.1024 36.4544 0.4096 54.6816 0.1024 12.8-1.4336 26.112-8.4992 37.12-10.24 17.0496-30.3104 27.5456-50.176 26.112a55.04 55.04 0 0 1-43.3664-24.9856c-7.936-11.776-9.472-26.2656-9.1136-40.0896 0.3584-18.7392-0.6656-37.4784 0.6144-56.1664 1.8432-25.6 23.9104-47.5136 49.408-49.664z" fill="currentColor"></path>
+        </svg>
+        哔哩哔哩
+    </a>
+     </div>
     <div id="aboutModal" class="modal">
         <div class="modal-content">
             <h2>关于我</h2>
@@ -336,15 +328,57 @@
         </div>
     </div>
 
+    <div id="birthdayOverlay" class="birthday-overlay">
+        <div class="birthday-card">
+            <button class="birthday-close" onclick="closeBirthday()">×</button>
+            <h2 style="font-size: 2.5em;">🎉 闪电生日快乐！ 🎉</h2>
+            <p style="font-size: 1.2em; margin: 1rem 0;">今天是你的特别日子！</p>
+            <div style="font-size: 3em; animation: sparkle 1s infinite;">⚡🎂⚡</div>
+        </div>
+    </div>
+
     <script>
-        fetch('https://v1.hitokoto.cn')
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('hitokoto').innerHTML = `
-                    <p>${data.hitokoto}</p>
-                    <small>—— ${data.from}</small>
-                `;
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.page-transition').forEach(el => {
+                el.style.animationDelay = '0.3s';
             });
+
+            const hamburger = document.getElementById('hamburger');
+            const mobileNav = document.getElementById('mobileNav');
+
+            hamburger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                mobileNav.classList.toggle('active');
+            });
+
+            document.addEventListener('click', () => {
+                if (mobileNav.classList.contains('active')) {
+                    mobileNav.classList.remove('active');
+                }
+            });
+
+            mobileNav.addEventListener('click', (e) => e.stopPropagation());
+
+            fetch('https://v1.hitokoto.cn')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('hitokoto').innerHTML = `<p>${data.hitokoto}</p><small>—— ${data.from}</small>`;
+                });
+
+            document.addEventListener('click', function(e) {
+                const effect = document.createElement('div');
+                effect.className = 'click-effect';
+                effect.style.left = e.pageX - 10 + 'px';
+                effect.style.top = e.pageY - 10 + 'px';
+                document.body.appendChild(effect);
+                setTimeout(() => effect.remove(), 600);
+            });
+
+            const today = new Date();
+            if(today.getMonth() === 2 && today.getDate() === 27) {
+                document.getElementById('birthdayOverlay').style.display = 'flex';
+            }
+        });
 
         function showModal() {
             document.getElementById('aboutModal').style.display = 'block';
@@ -354,53 +388,19 @@
             document.getElementById('aboutModal').style.display = 'none';
         }
 
-        window.onclick = function(event) {
-            if (event.target.className === 'modal') {
-                hideModal();
-            }
+        function closeBirthday() {
+            document.getElementById('birthdayOverlay').style.display = 'none';
         }
-        document.addEventListener('click', function(e) {
-            const effect = document.createElement('div');
-            effect.className = 'click-effect';
-            effect.style.left = e.pageX - 10 + 'px';
-            effect.style.top = e.pageY - 10 + 'px';
-            document.body.appendChild(effect);
-            
-            setTimeout(() => {
-                effect.remove();
-            }, 600);
-        });
-    // 生日检测功能
-    function checkBirthday() {
-        const today = new Date();
-        // 注意：JavaScript中月份从0开始计数（0=1月，1=2月...）
-        if(today.getMonth() === 2 && today.getDate() === 27) {
-            document.getElementById('birthdayOverlay').style.display = 'flex';
-        }
-    }
 
-    function closeBirthday() {
-        document.getElementById('birthdayOverlay').style.display = 'none';
-    }
-
-    // 在页面加载时执行检测
-    window.onload = function() {
-        checkBirthday();
-        // 其他初始化代码...
-    }
-
-    // 添加闪电动画
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes sparkle {
+        const style = document.createElement('style');
+        style.textContent = `@keyframes sparkle {
             0% { opacity: 1; transform: rotate(0deg); }
             25% { opacity: 0.8; transform: rotate(10deg); }
             50% { opacity: 1; transform: rotate(-10deg); }
             75% { opacity: 0.8; transform: rotate(5deg); }
             100% { opacity: 1; transform: rotate(0deg); }
-        }
-    `;
-    document.head.appendChild(style);
+        }`;
+        document.head.appendChild(style);
     </script>
 </body>
 </html>
