@@ -1,19 +1,19 @@
 document.addEventListener('DOMContentLoaded', () => {
     const greetings = ["2025年快乐", "祝你在新的一年里", "阖家幸福", "万事如意", "心想事成", "岁岁平安", "红包拿来"];
-    const images = ["/wx.jpg", "/zfb.jpg"]; // 修改为本地根目录路径
+    const images = ["/wx.jpg", "/zfb.jpg"]; 
     let currentGreetingIndex = 0;
     let currentImageIndex = 0;
 
     const greetingDiv = document.getElementById('greeting');
-    const imageWx = document.getElementById('wx'); // 修改为 'wx'
-    const imageZfb = document.getElementById('zfb'); // 修改为 'zfb'
+    const imageWx = document.getElementById('wx');
+    const imageZfb = document.getElementById('zfb'); 
 
     function showNextGreeting() {
         if (currentGreetingIndex < greetings.length) {
             greetingDiv.textContent = greetings[currentGreetingIndex];
             greetingDiv.style.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
             currentGreetingIndex++;
-            startFireworks(); // 每出现一个拜年词都放个烟花
+            startFireworks(); 
             setTimeout(showNextGreeting, 2000);
         } else {
             greetingDiv.classList.add('hidden');
@@ -22,9 +22,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showImages() {
-        imageWx.src = "./wx.jpg"; // 修改为相对路径
+        imageWx.src = "./wx.jpg"; 
         imageWx.classList.remove('hidden');
-        imageZfb.src = "./zfb.jpg"; // 修改为相对路径
+        imageZfb.src = "./zfb.jpg"; 
         imageZfb.classList.remove('hidden');
         startParticleEffect();
         setTimeout(startFireworks, 5000);
