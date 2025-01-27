@@ -18,12 +18,12 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 10;
-    transition: opacity 1s ease-out; /* 添加过渡效果 */
+    transition: opacity 1s ease-out; 
 }
 
 .hidden {
     display: none;
-    opacity: 0; /* 添加透明度 */
+    opacity: 0; 
 }
 
 #particlesCanvas, #fireworksCanvas {
@@ -38,38 +38,38 @@ canvas {
     background: #000;
 }
 
-/* 确保图片元素没有被其他样式覆盖或隐藏 */
+
 img {
     position: absolute;
-    z-index: 5; /* 确保图片在烟花效果之上 */
+    z-index: 5; 
     top: 50%;
     transform: translateY(-50%);
-    width: 50%; /* 设置图片宽度 */
-    max-width: 200px; /* 设置最大宽度 */
+    width: 50%; 
+    max-width: 200px; 
 }
 
 #wx {
-    left: 10%; /* 修改为左侧 */
-    z-index: 6; /* 确保 wx 图片在 zfb 图片之上 */
+    left: 10%; 
+    z-index: 6; 
 }
 
 #zfb {
-    right: 10%; /* 修改为右侧 */
-    z-index: 7; /* 确保 zfb 图片在 wx 图片之上 */
+    right: 10%; 
+    z-index: 7; 
 }
 
-/* 媒体查询以适应移动端 */
+
 @media (max-width: 600px) {
     img {
-        width: 80%; /* 在小屏幕上增加图片宽度 */
-        max-width: 150px; /* 设置最大宽度 */
+        width: 80%; 
+        max-width: 150px;
     }
 
     #wx {
-        left: 10%; /* 保持左侧位置 */
+        left: 10%; 
     }
 
     #zfb {
-        right: 10%; /* 保持右侧位置 */
+        right: 10%; 
     }
 }
