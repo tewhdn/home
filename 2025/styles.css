@@ -1,0 +1,75 @@
+body {
+    background: black;
+    overflow: hidden;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #fff;
+    font-family: Arial, sans-serif;
+}
+
+.greeting {
+    font-size: 3em;
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    transition: opacity 1s ease-out; /* 添加过渡效果 */
+}
+
+.hidden {
+    display: none;
+    opacity: 0; /* 添加透明度 */
+}
+
+#particlesCanvas, #fireworksCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+canvas {
+    background: #000;
+}
+
+/* 确保图片元素没有被其他样式覆盖或隐藏 */
+img {
+    position: absolute;
+    z-index: 5; /* 确保图片在烟花效果之上 */
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50%; /* 设置图片宽度 */
+    max-width: 200px; /* 设置最大宽度 */
+}
+
+#wx {
+    left: 10%; /* 修改为左侧 */
+    z-index: 6; /* 确保 wx 图片在 zfb 图片之上 */
+}
+
+#zfb {
+    right: 10%; /* 修改为右侧 */
+    z-index: 7; /* 确保 zfb 图片在 wx 图片之上 */
+}
+
+/* 媒体查询以适应移动端 */
+@media (max-width: 600px) {
+    img {
+        width: 80%; /* 在小屏幕上增加图片宽度 */
+        max-width: 150px; /* 设置最大宽度 */
+    }
+
+    #wx {
+        left: 10%; /* 保持左侧位置 */
+    }
+
+    #zfb {
+        right: 10%; /* 保持右侧位置 */
+    }
+}
