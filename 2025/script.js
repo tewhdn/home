@@ -22,9 +22,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showImages() {
-        imageWx.src = "./wx.jpg"; 
+        imageWx.src = "https://www.helloimg.com/i/2025/01/27/67978e4db0c24.jpg"; 
         imageWx.classList.remove('hidden');
-        imageZfb.src = "./zfb.jpg"; 
+        imageZfb.src = "https://www.helloimg.com/i/2025/01/27/67978edc6b104.jpg"; 
         imageZfb.classList.remove('hidden');
         startParticleEffect();
         setTimeout(startFireworks, 5000);
