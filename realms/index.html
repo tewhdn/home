@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>似真而幻 Minecraft Realms</title>
+    <style>
+        :root {
+            --primary-color: #4CAF50;  
+            --secondary-color: #2196F3; 
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                url('realms.png') fixed center center/cover no-repeat;
+            color: #fff;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        header {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 120px 0;
+            text-align: center;
+            border-bottom: 3px solid var(--primary-color);
+        }
+
+        .server-status {
+            background: rgba(40, 40, 40, 0.9);
+            padding: 20px;
+            margin: 20px auto;
+            width: 300px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px var(--primary-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section {
+            padding: 60px 0;
+            background: rgba(30, 30, 30, 0.9);
+            margin: 30px 0;
+            border-radius: 15px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 15px 35px;
+            margin: 15px;
+            font-size: 1.1rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .apply-btn {
+            background: var(--primary-color);
+            border: 2px solid #45a049;
+        }
+
+        .download-btn {
+            background: var(--secondary-color);
+            border: 2px solid #1976D2;
+        }
+
+        .button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            border-left: 5px solid var(--primary-color);
+            padding-left: 15px;
+            margin: 30px 0;
+        }
+
+        footer {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 30px 0;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .version-badge {
+            background: #ff5722;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            margin-left: 10px;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            .button { padding: 12px 25px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>似真而幻 <span class="version-badge">Java版 二周目</span></h1>
+            <div class="server-status">
+                <p>🟢 服务器在线中</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <section class="section">
+            <h2>加入我们的世界</h2>
+            <p>点击下方按钮填写申请表，审核通过后将会收到邀请邮件</p>
+            <a href="https://kaoshi.wjx.top/vm/eb3nkp1.aspx#" class="button apply-btn">立即申请加入</a>
+        </section>
+
+        <section class="section">
+            <h2>周目存档下载</h2>
+            <p>一周目存档（Java版）：</p>
+            <a href="https://www.123865.com/s/nZPYjv-UGBk" class="button download-btn">下载一周目存档</a>
+        </section>
+
+        <section class="section">
+            <h2>即将到来</h2>
+            <p>基岩版服务器正在筹备中...<br>
+            <small>(预计下辈子开放)</small></p>
+        </section>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>© 2025 似真而幻 Realms 服务器 保留所有权利</p>
+            <p>请不要使用共享账号加入</p>
+        </div>
+    </footer>
+</body>
+</html>
