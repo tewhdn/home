@@ -4,14 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>闪电的主页</title>
-    <link rel="icon" href="http://q1.qlogo.cn/g?b=qq&nk=2932944216&s=100" type="image/x-icon">
+    <link rel="icon" href="https://q1.qlogo.cn/g?b=qq&nk=2932944216&s=100" type="image/x-icon">
     <style>
-
         @font-face {
             font-family: 'Minecraft';
             src: url('https://assets.codepen.io/417525/minecraft-font.ttf') format('truetype');
         }
-
         :root {
             --primary-color: #2c3e50;
             --accent-color: #3498db;
@@ -19,8 +17,6 @@
             --text-color: #333;
             --btn-style: 'modern';
         }
-
-
         .minecraft-theme {
             --primary-color: #3b5c4d;
             --accent-color: #7baa6d;
@@ -29,7 +25,6 @@
             --btn-style: 'minecraft';
             font-family: 'Minecraft', monospace !important;
         }
-
         .theme-toggle {
             position: fixed;
             top: 10px;
@@ -44,44 +39,36 @@
             transition: all 0.1s;
             font-family: 'Minecraft', monospace;
         }
-
         .theme-toggle:active {
             transform: translate(2px, 2px);
             box-shadow: 1px 1px 0 #2d4a3d;
         }
-
         .minecraft-theme .nav-button {
             background: #7baa6d;
             border: 2px solid #698f5d;
             box-shadow: 3px 3px 0 #698f5d;
             border-radius: 0;
         }
-
         .minecraft-theme {
             background: var(--bg-color);
             color: var(--text-color);
         }
-
         .minecraft-theme .header {
             background: #2d4a3d;
             border-bottom: 4px solid #1d3025;
         }
-
         .minecraft-theme .music-toggle {
             background: #7baa6d;
             border: 2px solid #698f5d;
             box-shadow: 3px 3px 0 #698f5d;
         }
-
         .minecraft-theme .music-panel {
             background: rgba(59, 92, 77, 0.95);
             border: 2px solid #2d4a3d;
         }
-
         .minecraft-theme .progress-bar {
             background: #7baa6d;
         }
-
         .loader {
             position: fixed;
             top: 0;
@@ -95,7 +82,6 @@
             align-items: center;
             animation: fadeOut 1s 1s forwards;
         }
-
         .loader::after {
             content: "";
             width: 50px;
@@ -105,20 +91,16 @@
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
-
         @keyframes spin { to { transform: rotate(360deg); } }
         @keyframes fadeOut { to { opacity: 0; visibility: hidden; } }
-
         .page-transition {
             animation: pageIn 0.6s ease-out forwards;
             opacity: 0;
         }
-
         @keyframes pageIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
         .hamburger {
             display: none;
             background: none;
@@ -130,7 +112,6 @@
             top: 1rem;
             z-index: 100;
         }
-
         .mobile-nav {
             display: none;
             position: fixed;
@@ -145,15 +126,12 @@
             justify-content: center;
             animation: menuIn 0.3s ease-out;
         }
-
         @keyframes menuIn {
             from { opacity: 0; transform: translateY(-20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
         .mobile-nav.active { display: flex; }
         .mobile-nav .nav-button { margin: 1rem 0; font-size: 1.5rem; }
-
         body {
             font-family: 'Segoe UI', sans-serif;
             margin: 0;
@@ -162,7 +140,6 @@
             color: var(--text-color);
             transition: all 0.3s;
         }
-
         .header {
             background: var(--primary-color);
             color: white;
@@ -170,7 +147,6 @@
             text-align: center;
             transition: all 0.3s;
         }
-
         .nav-buttons {
             display: flex;
             gap: 1rem;
@@ -178,7 +154,6 @@
             padding: 1rem;
             flex-wrap: wrap;
         }
-
         .nav-button {
             background: var(--accent-color);
             color: white;
@@ -189,9 +164,7 @@
             border: none;
             cursor: pointer;
         }
-
         .nav-button:hover { transform: translateY(-2px); }
-
         .contact {
             display: flex;
             gap: 2rem;
@@ -199,7 +172,6 @@
             margin: 2rem 0;
             flex-wrap: wrap;
         }
-
         .contact a {
             display: flex;
             align-items: center;
@@ -209,9 +181,7 @@
             padding: 10px;
             transition: color 0.3s;
         }
-
         .contact a:hover { color: var(--accent-color); }
-
         .modal {
             display: none;
             position: fixed;
@@ -225,12 +195,10 @@
             z-index: 100;
             animation: modalIn 0.3s;
         }
-
         @keyframes modalIn {
             from { transform: translate(-50%, -60%); opacity: 0; }
             to { transform: translate(-50%, -50%); opacity: 1; }
         }
-
         .sponsor-btn {
             background: #e74c3c;
             color: white;
@@ -241,9 +209,7 @@
             margin-top: 1rem;
             transition: background 0.3s;
         }
-
         .sponsor-btn:hover { background: #c0392b; }
-
         .avatar {
             width: 100px;
             height: 100px;
@@ -254,9 +220,7 @@
             opacity: 0;
             transform: scale(0);
         }
-
         @keyframes avatarIn { to { opacity: 1; transform: scale(1); } }
-
         .close-btn {
             background: #e74c3c;
             color: white;
@@ -268,9 +232,7 @@
             font-size: 14px;
             margin-top: 1rem;
         }
-
         .close-btn:hover { background: #c0392b; transform: scale(1.05); }
-
         .click-effect {
             position: absolute;
             width: 20px;
@@ -279,13 +241,11 @@
             animation: lightning 0.6s;
             background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23FFD700"><path d="M7 2v11h3v9l7-12h-4l4-8H7z"/></svg>');
         }
-
         @keyframes lightning {
             0% { opacity: 1; transform: scale(1); }
             50% { opacity: 0.5; transform: scale(2); }
             100% { opacity: 0; transform: scale(3); }
         }
-
         .birthday-overlay {
             position: fixed;
             top: 0;
@@ -298,7 +258,6 @@
             justify-content: center;
             align-items: center;
         }
-
         .birthday-card {
             background: linear-gradient(45deg, #2c3e50, #3498db);
             padding: 2rem;
@@ -308,13 +267,11 @@
             color: white;
             position: relative;
         }
-
         @keyframes pulse {
             0% { transform: scale(1); }
             50% { transform: scale(1.05); }
             100% { transform: scale(1); }
         }
-
         .birthday-close {
             position: absolute;
             top: 10px;
@@ -325,7 +282,6 @@
             font-size: 1.5rem;
             cursor: pointer;
         }
-
         .music-miniplayer {
             position: fixed;
             bottom: 20px;
@@ -333,7 +289,6 @@
             z-index: 1000;
             transition: all 0.3s;
         }
-
         .music-toggle {
             width: 50px;
             height: 50px;
@@ -347,9 +302,7 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
             transition: transform 0.3s;
         }
-
         .music-toggle:hover { transform: scale(1.1); }
-
         .music-panel {
             position: absolute;
             bottom: 60px;
@@ -365,19 +318,16 @@
             transition: all 0.3s;
             pointer-events: none;
         }
-
         .music-panel.active {
             opacity: 1;
             transform: translateY(0);
             pointer-events: auto;
         }
-
         .player-controls {
             display: flex;
             align-items: center;
             gap: 10px;
         }
-
         .play-btn {
             background: var(--accent-color);
             border: none;
@@ -390,7 +340,6 @@
             align-items: center;
             justify-content: center;
         }
-
         .progress-container {
             flex-grow: 1;
             height: 4px;
@@ -399,7 +348,6 @@
             cursor: pointer;
             position: relative;
         }
-
         .progress-bar {
             height: 100%;
             background: var(--accent-color);
@@ -407,20 +355,17 @@
             width: 0%;
             transition: width 0.1s linear;
         }
-
         .time-display {
             font-size: 12px;
             color: #666;
             white-space: nowrap;
         }
-
         .volume-control {
             display: flex;
             align-items: center;
             gap: 5px;
             margin-top: 10px;
         }
-
         .volume-slider {
             width: 100px;
             height: 4px;
@@ -428,7 +373,6 @@
             background: #ddd;
             border-radius: 2px;
         }
-
         .volume-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
             width: 12px;
@@ -437,7 +381,6 @@
             border-radius: 50%;
             cursor: pointer;
         }
-
         @media (max-width: 768px) {
             .hamburger { display: block; }
             .nav-buttons { display: none; }
@@ -446,52 +389,71 @@
             .music-panel { width: 90%; right: 5%; }
             .theme-toggle { top: 60px; }
         }
-
-    .mc-icon { display: none; }
-    
-
-    .minecraft-theme .default-icon { display: none; }
-    .minecraft-theme .mc-icon { 
-        display: inline-block;
-        filter: drop-shadow(2px 2px 0 #2d4a3d); 
-    }
-    
-    .bilibili-link {
-        position: relative;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-    .bilibili-link svg {
-        vertical-align: middle;
-    }
+        .mc-icon { display: none; }
+        .minecraft-theme .default-icon { display: none; }
+        .minecraft-theme .mc-icon {
+            display: inline-block;
+            filter: drop-shadow(2px 2px 0 #2d4a3d);
+        }
+        .bilibili-link {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .bilibili-link svg {
+            vertical-align: middle;
+        }
+        /* New animation for birthday cake and countdown style */
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        .birthday-cake {
+            position: relative;
+            display: inline-block;
+            animation: bounce 1s infinite;
+            font-size: 3em;
+        }
+        .birthday-cake .candle {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.5em;
+            background-color: yellow;
+            border-radius: 50%;
+            padding: 2px 5px;
+            color: black;
+        }
+        .countdown {
+            margin-top: 0.5rem;
+            font-size: 1.2em;
+            color: var(--accent-color);
+        }
     </style>
 </head>
 <body>
     <button class="theme-toggle" id="themeToggle">MC风格</button>
-    
     <div class="loader"></div>
-
     <button class="hamburger" id="hamburger">☰</button>
     <div class="mobile-nav" id="mobileNav">
-        <a href="https://ai.shandiana.cn" class="nav-button">星辰AI</a>
+        <a href="https://chat.shandiana.cn" class="nav-button">AI</a>
         <a href="https://www.rainyun.com/MzA1MTM=_" class="nav-button">站长推荐</a>
         <a href="https://gxzh.shandiana.cn" class="nav-button">共享账号</a>
         <button class="nav-button" onclick="showModal()">关于</button>
     </div>
-
     <div class="header page-transition">
         <img src="http://q1.qlogo.cn/g?b=qq&nk=2932944216&s=100" alt="头像" class="avatar">
         <h1>闪电的主页</h1>
+        <div id="countdown" class="countdown"></div>
     </div>
-
     <div class="nav-buttons page-transition">
-        <a href="https://ai.shandiana.cn" class="nav-button">星辰AI</a>
+        <a href="https://chat.shandiana.cn" class="nav-button">AI</a>
         <a href="https://www.rainyun.com/MzA5MTM=_" class="nav-button">站长推荐</a>
         <a href="https://gxzh.shandiana.cn" class="nav-button">共享账号</a>
         <button class="nav-button" onclick="showModal()">关于</button>
     </div>
-
     <div class="contact">
         <a href="http://wpa.qq.com/msgrd?v=3&uin=2932944216&site=qq&menu=yes">
             <svg width="24" height="24" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
@@ -528,16 +490,14 @@
             <button onclick="hideModal()" class="close-btn">关闭</button>
         </div>
     </div>
-
     <div id="birthdayOverlay" class="birthday-overlay">
         <div class="birthday-card">
             <button class="birthday-close" onclick="closeBirthday()">×</button>
-            <h2 style="font-size: 2.5em;">🎉 闪电生日快乐！ 🎉</h2>
+            <h2 style="font-size: 2.5em;">🎉 祝闪电18岁生日快乐！ 🎉</h2>
             <p style="font-size: 1.2em; margin: 1rem 0;">今天是你的特别日子！</p>
-            <div style="font-size: 3em; animation: sparkle 1s infinite;">⚡🎂⚡</div>
+            <div class="birthday-cake">🎂<div class="candle">18</div></div>
         </div>
     </div>
-
     <div class="music-miniplayer">
         <div class="music-toggle" id="musicToggle">🎵</div>
         <div class="music-panel" id="musicPanel">
@@ -555,7 +515,6 @@
             </div>
         </div>
     </div>
-
     <script>
         const themeToggle = document.getElementById('themeToggle');
         themeToggle.addEventListener('click', () => {
@@ -619,6 +578,20 @@
                 document.body.appendChild(effect);
                 setTimeout(() => effect.remove(), 600);
             });
+            const countdownElement = document.getElementById('countdown');
+            const deadline = new Date(2026, 2, 27, 0, 0, 0);
+            function updateCountdown() {
+                const now = new Date();
+                let diff = deadline - now;
+                if (diff < 0) diff = 0;
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                countdownElement.textContent = `剩余${days}天${hours}小时${minutes}分钟${seconds}秒`;
+            }
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
 
             const today = new Date();
             if(today.getMonth() === 2 && today.getDate() === 27) {
