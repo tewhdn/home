@@ -1,669 +1,305 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>闪电的主页</title>
-    <link rel="icon" href="https://q1.qlogo.cn/g?b=qq&nk=2932944216&s=100" type="image/x-icon">
-    <style>
-        @font-face {
-            font-family: 'Minecraft';
-            src: url('https://assets.codepen.io/417525/minecraft-font.ttf') format('truetype');
-        }
-        :root {
-            --primary-color: #2c3e50;
-            --accent-color: #3498db;
-            --bg-color: #f5f6fa;
-            --text-color: #333;
-            --btn-style: 'modern';
-        }
-        .minecraft-theme {
-            --primary-color: #3b5c4d;
-            --accent-color: #7baa6d;
-            --bg-color: #606b54;
-            --text-color: #e0e0e0;
-            --btn-style: 'minecraft';
-            font-family: 'Minecraft', monospace !important;
-        }
-        .theme-toggle {
-            position: fixed;
-            top: 10px;
-            left: 10px;
-            z-index: 1000;
-            padding: 8px 12px;
-            background: #3b5c4d;
-            border: 2px solid #2d4a3d;
-            color: #fff;
-            cursor: pointer;
-            box-shadow: 3px 3px 0 #2d4a3d;
-            transition: all 0.1s;
-            font-family: 'Minecraft', monospace;
-        }
-        .theme-toggle:active {
-            transform: translate(2px, 2px);
-            box-shadow: 1px 1px 0 #2d4a3d;
-        }
-        .minecraft-theme .nav-button {
-            background: #7baa6d;
-            border: 2px solid #698f5d;
-            box-shadow: 3px 3px 0 #698f5d;
-            border-radius: 0;
-        }
-        .minecraft-theme {
-            background: var(--bg-color);
-            color: var(--text-color);
-        }
-        .minecraft-theme .header {
-            background: #2d4a3d;
-            border-bottom: 4px solid #1d3025;
-        }
-        .minecraft-theme .music-toggle {
-            background: #7baa6d;
-            border: 2px solid #698f5d;
-            box-shadow: 3px 3px 0 #698f5d;
-        }
-        .minecraft-theme .music-panel {
-            background: rgba(59, 92, 77, 0.95);
-            border: 2px solid #2d4a3d;
-        }
-        .minecraft-theme .progress-bar {
-            background: #7baa6d;
-        }
-        .loader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: white;
-            z-index: 9999;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            animation: fadeOut 1s 1s forwards;
-        }
-        .loader::after {
-            content: "";
-            width: 50px;
-            height: 50px;
-            border: 5px solid var(--accent-color);
-            border-top-color: transparent;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        @keyframes fadeOut { to { opacity: 0; visibility: hidden; } }
-        .page-transition {
-            animation: pageIn 0.6s ease-out forwards;
-            opacity: 0;
-        }
-        @keyframes pageIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .hamburger {
-            display: none;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 2rem;
-            position: absolute;
-            right: 1rem;
-            top: 1rem;
-            z-index: 100;
-        }
-        .mobile-nav {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.95);
-            z-index: 99;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            animation: menuIn 0.3s ease-out;
-        }
-        @keyframes menuIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .mobile-nav.active { display: flex; }
-        .mobile-nav .nav-button { margin: 1rem 0; font-size: 1.5rem; }
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            margin: 0;
-            padding: 0;
-            background: var(--bg-color);
-            color: var(--text-color);
-            transition: all 0.3s;
-        }
-        .header {
-            background: var(--primary-color);
-            color: white;
-            padding: 1rem;
-            text-align: center;
-            transition: all 0.3s;
-        }
-        .nav-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            padding: 1rem;
-            flex-wrap: wrap;
-        }
-        .nav-button {
-            background: var(--accent-color);
-            color: white;
-            padding: 0.8rem 1.5rem;
-            border-radius: 25px;
-            text-decoration: none;
-            transition: transform 0.2s;
-            border: none;
-            cursor: pointer;
-        }
-        .nav-button:hover { transform: translateY(-2px); }
-        .contact {
-            display: flex;
-            gap: 2rem;
-            justify-content: center;
-            margin: 2rem 0;
-            flex-wrap: wrap;
-        }
-        .contact a {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--text-color);
-            text-decoration: none;
-            padding: 10px;
-            transition: color 0.3s;
-        }
-        .contact a:hover { color: var(--accent-color); }
-        .modal {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.2);
-            z-index: 100;
-            animation: modalIn 0.3s;
-        }
-        @keyframes modalIn {
-            from { transform: translate(-50%, -60%); opacity: 0; }
-            to { transform: translate(-50%, -50%); opacity: 1; }
-        }
-        .sponsor-btn {
-            background: #e74c3c;
-            color: white;
-            padding: 0.8rem 1.5rem;
-            border-radius: 25px;
-            text-decoration: none;
-            display: inline-block;
-            margin-top: 1rem;
-            transition: background 0.3s;
-        }
-        .sponsor-btn:hover { background: #c0392b; }
-        .avatar {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            margin: 1rem auto;
-            display: block;
-            animation: avatarIn 0.8s 1s forwards;
-            opacity: 0;
-            transform: scale(0);
-        }
-        @keyframes avatarIn { to { opacity: 1; transform: scale(1); } }
-        .close-btn {
-            background: #e74c3c;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 14px;
-            margin-top: 1rem;
-        }
-        .close-btn:hover { background: #c0392b; transform: scale(1.05); }
-        .click-effect {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            pointer-events: none;
-            animation: lightning 0.6s;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23FFD700"><path d="M7 2v11h3v9l7-12h-4l4-8H7z"/></svg>');
-        }
-        @keyframes lightning {
-            0% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(2); }
-            100% { opacity: 0; transform: scale(3); }
-        }
-        .birthday-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.9);
-            z-index: 999;
-            display: none;
-            justify-content: center;
-            align-items: center;
-        }
-        .birthday-card {
-            background: linear-gradient(45deg, #2c3e50, #3498db);
-            padding: 2rem;
-            border-radius: 15px;
-            text-align: center;
-            animation: pulse 2s infinite;
-            color: white;
-            position: relative;
-        }
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-        .birthday-close {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-        .music-miniplayer {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1000;
-            transition: all 0.3s;
-        }
-        .music-toggle {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: var(--accent-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            cursor: pointer;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            transition: transform 0.3s;
-        }
-        .music-toggle:hover { transform: scale(1.1); }
-        .music-panel {
-            position: absolute;
-            bottom: 60px;
-            right: 0;
-            width: 300px;
-            background: rgba(255,255,255,0.95);
-            border-radius: 15px;
-            padding: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            backdrop-filter: blur(5px);
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.3s;
-            pointer-events: none;
-        }
-        .music-panel.active {
-            opacity: 1;
-            transform: translateY(0);
-            pointer-events: auto;
-        }
-        .player-controls {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .play-btn {
-            background: var(--accent-color);
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .progress-container {
-            flex-grow: 1;
-            height: 4px;
-            background: #ddd;
-            border-radius: 2px;
-            cursor: pointer;
-            position: relative;
-        }
-        .progress-bar {
-            height: 100%;
-            background: var(--accent-color);
-            border-radius: 2px;
-            width: 0%;
-            transition: width 0.1s linear;
-        }
-        .time-display {
-            font-size: 12px;
-            color: #666;
-            white-space: nowrap;
-        }
-        .volume-control {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            margin-top: 10px;
-        }
-        .volume-slider {
-            width: 100px;
-            height: 4px;
-            -webkit-appearance: none;
-            background: #ddd;
-            border-radius: 2px;
-        }
-        .volume-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 12px;
-            height: 12px;
-            background: var(--accent-color);
-            border-radius: 50%;
-            cursor: pointer;
-        }
-        @media (max-width: 768px) {
-            .hamburger { display: block; }
-            .nav-buttons { display: none; }
-            .contact { flex-direction: column; }
-            .header h1 { font-size: 1.5rem; }
-            .music-panel { width: 90%; right: 5%; }
-            .theme-toggle { top: 60px; }
-        }
-        .mc-icon { display: none; }
-        .minecraft-theme .default-icon { display: none; }
-        .minecraft-theme .mc-icon {
-            display: inline-block;
-            filter: drop-shadow(2px 2px 0 #2d4a3d);
-        }
-        .bilibili-link {
-            position: relative;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .bilibili-link svg {
-            vertical-align: middle;
-        }
-        /* New animation for birthday cake and countdown style */
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
-        }
-        .birthday-cake {
-            position: relative;
-            display: inline-block;
-            animation: bounce 1s infinite;
-            font-size: 3em;
-        }
-        .birthday-cake .candle {
-            position: absolute;
-            top: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 0.5em;
-            background-color: yellow;
-            border-radius: 50%;
-            padding: 2px 5px;
-            color: black;
-        }
-        .countdown {
-            margin-top: 0.5rem;
-            font-size: 1.2em;
-            color: var(--accent-color);
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>闪电的个人主页 · 修复显示不全</title>
+  <meta name="description" content="闪电的个人主页｜Minecraft 爱好者｜高中生站长" />
+  <link rel="preload" as="image" href="https://q1.qlogo.cn/g?b=qq&nk=2932944216&s=100">
+  <style>
+ 
+    :root{
+      --bg: radial-gradient(1200px 600px at 10% 0%, #0ea5e9 0%, transparent 60%),
+            radial-gradient(800px 600px at 100% 0%, #22c55e 0%, transparent 60%),
+            radial-gradient(900px 500px at 50% 100%, #a855f7 0%, transparent 60%),
+            #0b1020;
+      --card: rgba(255,255,255,0.08);
+      --card-border: rgba(255,255,255,0.2);
+      --text: #e6f1ff;
+      --muted: #a8b3c9;
+      --btn: #111827;
+      --btn-text: #e5e7eb;
+    }
+    *{ box-sizing:border-box }
+    html{ height:auto }
+    body{
+      margin:0;
+      min-height:100vh; /* 回退 */
+      min-height:100svh; /* iOS 16+ 安全视口 */
+      min-height:100dvh; /* 新标准 */
+      background: var(--bg);
+      background-size:200% 200%;
+      color: var(--text);
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,"PingFang SC","Noto Sans SC","Microsoft YaHei",sans-serif;
+      padding: 0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+      animation:bgShift 20s ease infinite;
+    }
+    @keyframes bgShift{0%{background-position:0% 0%}50%{background-position:100% 50%}100%{background-position:0% 0%}}
+
+    main.wrap{ width:min(1100px,100%); margin-inline:auto; padding:24px 16px 40px; display:grid; gap:20px }
+
+    .card{ background:var(--card); border:1px solid var(--card-border); border-radius:18px; backdrop-filter:blur(10px); box-shadow:0 10px 30px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.05) }
+
+    header.card{ display:grid; grid-template-columns:auto 1fr; gap:18px; align-items:center; padding:20px }
+    .avatar{ width:96px;height:96px;border-radius:50%; border:2px solid rgba(255,255,255,.3); background:#0b1020 url('https://q1.qlogo.cn/g?b=qq&nk=2932944216&s=100') center/cover no-repeat; position:relative; box-shadow:0 6px 20px rgba(34,211,238,.35) }
+    .avatar::after{ content:""; position:absolute; inset:-6px; border-radius:50%; background:conic-gradient(from 0deg,#06b6d4,transparent 60%); filter:blur(12px); opacity:.35; z-index:-1 }
+    .floating{ animation:float 4s ease-in-out infinite }
+    @keyframes float{0%{transform:translateY(0)}50%{transform:translateY(-4px)}100%{transform:translateY(0)}}
+
+    .title{ display:flex; flex-direction:column; gap:4px }
+    h1{margin:0;font-size:clamp(22px,3.3vw,36px)}
+    .subtitle{color:var(--muted); font-size:14px; min-height:1.4em}
+
+  
+    .grid{ display:grid; grid-template-columns: repeat(12, 1fr); gap:16px }
+    .panel{ padding:16px }
+
+    #block-countdown{ grid-column: span 12 }
+    #block-nav{ grid-column: span 7 }
+    #block-music{ grid-column: span 5 }
+    #block-contact{ grid-column: span 12 }
+
+    @media (max-width: 960px){
+      #block-nav{ grid-column: span 12 }
+      #block-music{ grid-column: span 12 }
+    }
+    @media (max-width: 640px){
+      .grid{ grid-template-columns: 1fr }
+      #block-countdown, #block-nav, #block-music, #block-contact{ grid-column: 1 / -1 }
+    }
+
+    .buttons{ display:flex; flex-wrap:wrap; gap:12px }
+    .btn{ appearance:none; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border-radius:12px; font-weight:600; background:var(--btn); color:var(--btn-text); border:1px solid rgba(255,255,255,.08); text-decoration:none; transition: transform .08s ease, background .2s ease, box-shadow .2s ease; box-shadow:0 4px 10px rgba(0,0,0,.25); position:relative; overflow:hidden }
+    .btn::after{ content:""; position:absolute; inset:0; background:radial-gradient(circle at var(--x,50%) var(--y,50%), rgba(255,255,255,.18), transparent 40%); opacity:0; transition:opacity .2s }
+    .btn:hover{ transform:translateY(-1px) }
+    .btn:hover::after{ opacity:1 }
+    .btn-accent{ background:linear-gradient(135deg,#3b82f6,#06b6d4); color:white }
+
+    .countdown{ display:flex; gap:10px; flex-wrap:wrap }
+    .chip{ background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); padding:12px 14px; border-radius:12px; text-align:center; min-width:92px }
+    .chip strong{ display:block; font-size:22px; transition:transform .2s ease }
+    .chip.bump strong{ transform:scale(1.1) }
+    .chip span{ color:var(--muted); font-size:12px }
+
+    .links{ display:flex; gap:14px; flex-wrap:wrap; align-items:center }
+    .icon-link{ display:inline-flex; align-items:center; gap:8px; padding:10px 12px; border-radius:12px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); text-decoration:none; color:var(--text) }
+    .icon{ width:20px; height:20px; display:inline-block }
+
+
+    .music-player { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 14px; padding: 16px; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px; box-shadow: 0 4px 14px rgba(0,0,0,0.18); }
+    .music-cover { width: 44px; height: 44px; border-radius: 10px; background: linear-gradient(135deg,#06b6d4,#3b82f6) }
+    .music-title { font-size: 14px; color: #a8b3c9 }
+    .music-ctrl { display:flex; align-items:center; gap:8px }
+    .music-btn { width:48px; height:48px; border:none; border-radius:50%; background: linear-gradient(135deg,#3b82f6,#06b6d4); color:#fff; font-size:18px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; transition: transform .1s ease }
+    .music-btn:hover { transform: scale(1.05) }
+    .hitokoto { margin-top:10px; font-size:14px; color:#a8b3c9; opacity:.95 }
+
+    footer{ color:var(--muted); font-size:13px; text-align:center }
+
+    .modal-backdrop{ position:fixed; inset:0; background:rgba(0,0,0,.5); display:none; align-items:center; justify-content:center; padding:20px; z-index:50 }
+    .modal{ width:min(560px,100%); background:#0f172a; border:1px solid rgba(255,255,255,.12); border-radius:16px; padding:18px }
+    .modal h3{ margin:0 0 10px 0 }
+    .modal p{ color:var(--muted); line-height:1.7 }
+    .modal .actions{ display:flex; gap:10px; justify-content:flex-end; margin-top:14px }
+
+    .reveal{ opacity:0; transform:translateY(12px); transition:opacity .6s ease, transform .6s ease }
+    .reveal.in{ opacity:1; transform:none }
+
+    @media (max-width:640px){ .buttons{ flex-direction:column } .btn, .icon-link{ width:100%; justify-content:center } }
+
+
+    @media (prefers-reduced-motion:reduce){ *{ animation:none !important; transition:none !important } }
+  </style>
 </head>
 <body>
-    <button class="theme-toggle" id="themeToggle">MC风格</button>
-    <div class="loader"></div>
-    <button class="hamburger" id="hamburger">☰</button>
-    <div class="mobile-nav" id="mobileNav">
-        <a href="https://chat.shandiana.cn" class="nav-button">AI</a>
-        <a href="https://www.rainyun.com/MzA1MTM=_" class="nav-button">站长推荐</a>
-        <a href="https://gxzh.shandiana.cn" class="nav-button">共享账号</a>
-        <button class="nav-button" onclick="showModal()">关于</button>
+  <main class="wrap">
+    <header class="card reveal">
+      <div class="avatar floating" aria-hidden="true"></div>
+      <div class="title">
+        <h1>⚡ 闪电的个人主页</h1>
+        <div class="subtitle">Minecraft 爱好者｜高中生站长｜欢迎来访</div>
+      </div>
+    </header>
+
+    <section class="grid">
+      <section id="block-countdown" class="card panel reveal" aria-labelledby="countdown-title">
+        <h2 id="countdown-title" style="margin:0 0 10px 0">🎉 距离 2026-03-27 00:00（18岁生日）倒计时</h2>
+        <div class="countdown" id="countdown">
+          <div class="chip"><strong id="d">--</strong><span>天</span></div>
+          <div class="chip"><strong id="h">--</strong><span>时</span></div>
+          <div class="chip"><strong id="m">--</strong><span>分</span></div>
+          <div class="chip"><strong id="s">--</strong><span>秒</span></div>
+        </div>
+        <p id="countdown-tip" style="margin-top:10px;color:var(--muted)">系统将根据你的本地时间计算。</p>
+      </section>
+
+      <section id="block-nav" class="card panel reveal" aria-labelledby="nav-title">
+        <h2 id="nav-title" style="margin:0 0 10px 0">🧭 站点导航</h2>
+        <div class="buttons">
+          <a class="btn btn-accent" href="https://chat.shandiana.cn" target="_blank" rel="noopener noreferrer" aria-label="AI">AI</a>
+          <a class="btn" href="https://www.rainyun.com/MzA5MTM=_" target="_blank" rel="noopener noreferrer" aria-label="站长推荐">站长推荐</a>
+          <a class="btn" href="https://gxzh.shandiana.cn/" target="_blank" rel="noopener noreferrer" aria-label="共享账号">共享账号</a>
+          <button class="btn" id="aboutBtn" aria-haspopup="dialog" aria-controls="aboutModal">关于</button>
+        </div>
+      </section>
+
+      <section id="block-music" class="card panel reveal" aria-labelledby="music-title">
+        <h2 id="music-title" style="margin:0 0 10px 0">🎵 音乐</h2>
+        <div class="music-player">
+          <div class="music-cover" aria-hidden="true"></div>
+          <div class="music-title" id="trackName">正在播放：在线音乐</div>
+          <div class="music-ctrl">
+            <button id="playPauseBtn" class="music-btn" aria-label="播放/暂停">▶︎</button>
+          </div>
+          <audio id="audio" preload="none" src="https://lw-sycdn.kuwo.cn/95afc649f66bdc9bdb4a760f15de6030/6895635d/resource/30106/trackmedia/M500004alEEO1pjOdt.mp3?bitrate$128&from=vip" style="display:none"></audio>
+        </div>
+        <div id="hitokoto" class="hitokoto">加载一句话…</div>
+      </section>
+
+      <section id="block-contact" class="card panel reveal" aria-labelledby="contact-title">
+        <h2 id="contact-title" style="margin:0 0 10px 0">📡 联系方式</h2>
+        <div class="links">
+          <a class="icon-link" href="http://wpa.qq.com/msgrd?v=3&uin=2932944216&site=qq&menu=yes" target="_blank" rel="noopener noreferrer" aria-label="QQ">QQ</a>
+          <a class="icon-link" href="mailto:2932944216@qq.com" aria-label="邮箱">邮箱</a>
+          <a class="icon-link" href="https://space.bilibili.com/1675718825" target="_blank" rel="noopener noreferrer" aria-label="哔哩哔哩">哔哩哔哩</a>
+        </div>
+      </section>
+    </section>
+
+    <footer>
+      <p style="text-align:center">© <span id="year"></span> 闪电 · Powered by HTML + CSS + JS · 愿每一次闪电都照亮前行的路 ⚡</p>
+    </footer>
+  </main>
+
+
+  <div class="modal-backdrop" id="aboutBackdrop" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
+    <div class="modal" id="aboutModal">
+      <h3 id="aboutTitle">关于本站</h3>
+      <p>关于我：<br/>我是 <strong>闪电</strong>，一个高中生，同时也是本站站长。很高兴认识你！</p>
+      <div class="actions">
+        <a class="btn btn-accent" href="https://zanzhu.shandiana.cn/" target="_blank" rel="noopener noreferrer">💖 赞助我</a>
+        <button class="btn" id="closeAbout">关闭</button>
+      </div>
     </div>
-    <div class="header page-transition">
-        <img src="http://q1.qlogo.cn/g?b=qq&nk=2932944216&s=100" alt="头像" class="avatar">
-        <h1>闪电的主页</h1>
-        <div id="countdown" class="countdown"></div>
-    </div>
-    <div class="nav-buttons page-transition">
-        <a href="https://chat.shandiana.cn" class="nav-button">AI</a>
-        <a href="https://www.rainyun.com/MzA5MTM=_" class="nav-button">站长推荐</a>
-        <a href="https://gxzh.shandiana.cn" class="nav-button">共享账号</a>
-        <button class="nav-button" onclick="showModal()">关于</button>
-    </div>
-    <div class="contact">
-        <a href="http://wpa.qq.com/msgrd?v=3&uin=2932944216&site=qq&menu=yes">
-            <svg width="24" height="24" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                <path d="M824.8 613.2c-16-51.4-34.4-94.6-62.7-165.3C766.5 262.2 689.3 112 511.5 112 331.7 112 256.2 265.2 261 447.9c-28.4 70.8-46.7 113.7-62.7 165.3-34 109.5-23 154.8-14.6 155.8 18 2.2 70.1-82.4 70.1-82.4 0 49 25.2 112.9 79.8 159-26.4 8.1-85.7 29.9-71.6 53.8 11.4 19.3 196.2 12.3 249.5 6.3 53.3 6 238.1 13 249.5-6.3 14.1-23.8-45.3-45.7-71.6-53.8 54.6-46.2 79.8-110.1 79.8-159 0 0 52.1 84.6 70.1 82.4 8.5-1.1 19.5-46.4-14.5-155.8z" fill="currentColor"></path>
-            </svg>
-            QQ
-        </a>
-        <a href="mailto:2932944216@qq.com">
-            <svg width="24" height="24" viewBox="0 0 24 24">
-                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" fill="currentColor"/>
-            </svg>
-            邮箱
-        </a>
-<a href="https://space.bilibili.com/1675718825" class="bilibili-link">
-    <!-- 默认图标 -->
-    <svg class="default-icon" width="24" height="24" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
-        <path d="M278.8864 148.1728c14.336-8.192 32.6144-9.3696 47.8208-2.6624 11.3664 4.6592 19.968 13.824 29.184 21.6064 38.144 32.9216 75.9808 66.304 114.2784 99.0208h80.4352c38.2976-32.768 76.0832-66.048 114.2272-98.9696 9.2672-7.7824 17.8688-16.896 29.2864-21.6576 14.7456-6.5024 32.4608-5.632 46.592 2.048 16.5888 8.5504 28.1088 26.2656 28.8256 44.9536 1.024 13.568-3.84 27.2896-12.3392 37.7856-7.5264 8.3456-16.5376 15.2064-24.8832 22.6816-5.3248 4.4032-10.1376 9.5232-16.0256 13.2096 23.6544 0 47.2576-0.256 70.912 0.1536 31.1296 0.8192 61.44 14.592 82.8928 37.1712 22.6304 22.2208 35.5328 53.5552 35.4816 85.1968 0.1024 108.4416 0 216.9344 0.0512 325.376-0.1024 16.384 0.8192 33.024-2.816 49.152-6.656 32.9728-28.8256 61.5936-56.9856 79.36a121.344 121.344 0 0 1-64.7168 17.7664H263.2704c-16.9984-0.1024-34.2528 0.8704-50.9952-2.8672-32.1024-6.4512-60.0064-27.648-77.824-54.6304a121.088 121.088 0 0 1-19.2512-66.9696v-321.536c0.1024-16.5376-0.9216-33.1776 2.4576-49.408 10.24-52.9408 58.9312-96.1024 112.9984-98.4576 24.6272-0.768 49.3056-0.2048 73.9328-0.3072-11.6224-8.3968-21.8112-18.5344-32.768-27.7504a55.04 55.04 0 0 1-20.5312-45.9264c0.7168-18.2272 11.6736-35.584 27.648-44.3392m-13.056 221.7984c-20.992 3.7376-38.912 20.3264-44.7488 40.7552a76.4928 76.4928 0 0 0-2.3552 21.7088c0.1024 89.0368-0.0512 178.0736 0.0512 267.1616-0.4096 24.2176 16.3328 47.1552 39.1168 54.8864 8.1408 2.9696 16.896 3.0208 25.3952 3.072 153.1904-0.1024 306.432 0.0512 459.6224-0.0512 22.4768 0.8704 44.0832-13.1072 53.5552-33.28 5.7856-11.5712 5.6832-24.7296 5.4784-37.376v-248.832c0-9.1136 0.3072-18.4832-2.304-27.2896a58.7776 58.7776 0 0 0-36.864-38.656c-9.7792-3.584-20.4288-3.0208-30.6688-3.072H292.5056c-8.8576 0-17.8176-0.3072-26.624 0.9728z"></path>
-        <path d="M358.7072 455.5264c14.6432-1.4848 29.8496 3.2768 41.0112 12.8 12.4416 10.24 19.5584 26.112 19.7632 42.1376 0.3584 19.4048 0.1024 38.8608 0.1024 58.2656 0 12.8-3.3792 25.8048-11.3152 35.9424a54.9888 54.9888 0 0 1-48.4864 21.76 54.9376 54.9376 0 0 1-44.032-28.2624c-6.8096-11.6736-7.3728-25.4976-7.168-38.6048 0.4096-18.8416-1.024-37.7856 0.8704-56.576a55.296 55.296 0 0 1 49.2544-47.4624z m292.4544 0a55.2448 55.2448 0 0 1 60.7232 53.0432c0.8192 18.2272 0.1024 36.4544 0.4096 54.6816 0.1024 12.8-1.4336 26.112-8.4992 37.12-10.24 17.0496-30.3104 27.5456-50.176 26.112a55.04 55.04 0 0 1-43.3664-24.9856c-7.936-11.776-9.472-26.2656-9.1136-40.0896 0.3584-18.7392-0.6656-37.4784 0.6144-56.1664 1.8432-25.6 23.9104-47.5136 49.408-49.664z"></path>
-    </svg>
-    <svg class="mc-icon" t="1737722976681" width="24" height="24" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1818">
-        <path d="M204.8 309.475556v104.675555h210.261333l-2.730666 10.012445c-1.365333 5.916444-2.730667 28.216889-2.730667 50.062222v40.049778H359.992889c-47.331556 0-49.607111 0.455111-52.337778 10.012444-1.365333 5.916444-2.730667 74.638222-2.730667 152.462222V819.2h109.226667v-100.124444h200.248889v100.124444h104.675556v-304.924444h-100.124445v-40.049778c0-21.845333-1.365333-44.145778-2.730667-50.062222l-2.730666-10.012445H819.2V204.8h-204.8v204.8H414.151111V204.8H204.8v104.675556z" p-id="1819"></path>
-    </svg>
+  </div>
+
+  <script>
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+  
+    document.querySelectorAll('.btn').forEach(btn=>{
+      btn.addEventListener('pointermove', (e)=>{
+        const r = btn.getBoundingClientRect();
+        btn.style.setProperty('--x', (e.clientX - r.left) + 'px');
+        btn.style.setProperty('--y', (e.clientY - r.top) + 'px');
+      });
+    });
+
+
+    const target = new Date('2026-03-27T00:00:00');
+    const d = document.getElementById('d');
+    const h = document.getElementById('h');
+    const m = document.getElementById('m');
+    const s = document.getElementById('s');
+    const tip = document.getElementById('countdown-tip');
+
+    let last = {d:null,h:null,m:null,s:null};
+    function bumpIfChange(id, val){
+      if(last[id] !== val){
+        document.getElementById(id).parentElement.classList.add('bump');
+        setTimeout(()=>document.getElementById(id).parentElement.classList.remove('bump'), 180);
+        last[id] = val;
+      }
+    }
+    function updateCountdown(){
+      const now = new Date();
+      const ms = target - now;
+      if (ms <= 0){
+        d.textContent = '0'; h.textContent = '0'; m.textContent = '0'; s.textContent = '0';
+        tip.textContent = '倒计时结束！生日快乐，闪电！18岁啦！';
+        return;
+      }
+      const totalSeconds = Math.floor(ms / 1000);
+      const days = Math.floor(totalSeconds / (3600*24));
+      const hours = Math.floor((totalSeconds % (3600*24)) / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+      d.textContent = days; bumpIfChange('d', days);
+      h.textContent = hours.toString().padStart(2,'0'); bumpIfChange('h', hours);
+      m.textContent = minutes.toString().padStart(2,'0'); bumpIfChange('m', minutes);
+      s.textContent = seconds.toString().padStart(2,'0'); bumpIfChange('s', seconds);
+    }
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+
+   
+    const aboutBtn = document.getElementById('aboutBtn');
+    const backdrop = document.getElementById('aboutBackdrop');
+    const closeAbout = document.getElementById('closeAbout');
+    function openAbout(){ backdrop.style.display = 'flex'; }
+    function closeModal(){ backdrop.style.display = 'none'; }
+    aboutBtn.addEventListener('click', openAbout);
+    if (closeAbout) closeAbout.addEventListener('click', closeModal);
+    backdrop.addEventListener('click', (e)=>{ if(e.target === backdrop) closeModal(); });
+    window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeModal(); })
+
+   
+    const audio = document.getElementById('audio');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const trackName = document.getElementById('trackName');
+
+    function refreshIcon(){ playPauseBtn.textContent = audio.paused ? '▶︎' : '⏸'; }
+    playPauseBtn.addEventListener('click', ()=>{ if (audio.paused) { audio.play(); } else { audio.pause(); } });
+    audio.addEventListener('play', refreshIcon);
+    audio.addEventListener('pause', refreshIcon);
+    document.addEventListener('visibilitychange', ()=>{ if (document.hidden) { audio.pause(); } });
+    refreshIcon();
+
     
-    哔哩哔哩
-</a>
+    (function(){
+      const QUOTES = [
+        '愿每一次闪电都照亮前行之路。',
+        '方块之上，也有无限宇宙。',
+        '保持好奇，保持热爱。',
+        '今天也要元气满满！',
+        '把目标拆成方块，一块一块搭起来。',
+        '不畏乌云电闪，心有光就不怕黑。',
+        '愿你前程似锦，所愿皆成。',
+        '让喜欢的一切，发光。',
+        '慢慢来，但一直在。'
+      ];
+      const d = new Date();
+      const idx = (d.getFullYear()*372 + (d.getMonth()+1)*31 + d.getDate()) % QUOTES.length; 
+      const el = document.getElementById('hitokoto');
+      if (el) el.textContent = QUOTES[idx];
+    })();
 
-    </div>
+    
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el=> io.observe(el));
 
-    <div id="aboutModal" class="modal">
-        <div class="modal-content">
-            <h2>关于我</h2>
-            <p>我是闪电，一个高中生同时也是本站站长</p>
-            <a href="https://zanzhu.shandiana.cn" class="sponsor-btn">赞助支持</a>
-            <button onclick="hideModal()" class="close-btn">关闭</button>
-        </div>
-    </div>
-    <div id="birthdayOverlay" class="birthday-overlay">
-        <div class="birthday-card">
-            <button class="birthday-close" onclick="closeBirthday()">×</button>
-            <h2 style="font-size: 2.5em;">🎉 祝闪电18岁生日快乐！ 🎉</h2>
-            <p style="font-size: 1.2em; margin: 1rem 0;">今天是你的特别日子！</p>
-            <div class="birthday-cake">🎂<div class="candle">18</div></div>
-        </div>
-    </div>
-    <div class="music-miniplayer">
-        <div class="music-toggle" id="musicToggle">🎵</div>
-        <div class="music-panel" id="musicPanel">
-            <audio id="audioPlayer" src="music/song1.mp3"></audio>
-            <div class="player-controls">
-                <button class="play-btn" id="playBtn">▶</button>
-                <div class="progress-container" id="progressContainer">
-                    <div class="progress-bar" id="progressBar"></div>
-                </div>
-                <span class="time-display" id="timeDisplay">0:00 / 0:00</span>
-            </div>
-            <div class="volume-control">
-                <span>🔊</span>
-                <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.1" value="1">
-            </div>
-        </div>
-    </div>
-    <script>
-        const themeToggle = document.getElementById('themeToggle');
-        themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('minecraft-theme');
-            localStorage.setItem('theme', document.body.classList.contains('minecraft-theme') ? 'minecraft' : 'default');
-        });
+    
+    const subtitle = document.querySelector('.subtitle');
+    const full = subtitle.textContent; subtitle.textContent = '';
+    let i = 0; (function type(){ subtitle.textContent = full.slice(0, ++i); if(i < full.length) setTimeout(type, 40); })();
 
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'minecraft') {
-            document.body.classList.add('minecraft-theme');
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            document.querySelectorAll('.page-transition').forEach(el => {
-                el.style.animationDelay = '0.3s';
-            });
-
-            const hamburger = document.getElementById('hamburger');
-            const mobileNav = document.getElementById('mobileNav');
-            const audio = document.getElementById('audioPlayer');
-            const playBtn = document.getElementById('playBtn');
-            const progressBar = document.getElementById('progressBar');
-            const progressContainer = document.getElementById('progressContainer');
-            const timeDisplay = document.getElementById('timeDisplay');
-            const volumeSlider = document.getElementById('volumeSlider');
-            const musicToggle = document.getElementById('musicToggle');
-            const musicPanel = document.getElementById('musicPanel');
-
-            hamburger.addEventListener('click', (e) => {
-                e.stopPropagation();
-                mobileNav.classList.toggle('active');
-            });
-
-            document.addEventListener('click', (e) => {
-                if (mobileNav.classList.contains('active')) {
-                    mobileNav.classList.remove('active');
-                }
-                if (!musicPanel.contains(e.target) && !musicToggle.contains(e.target)) {
-                    musicPanel.classList.remove('active');
-                }
-            });
-
-            musicToggle.addEventListener('click', (e) => {
-                e.stopPropagation();
-                musicPanel.classList.toggle('active');
-            });
-
-            mobileNav.addEventListener('click', (e) => e.stopPropagation());
-
-            fetch('https://v1.hitokoto.cn')
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('hitokoto').innerHTML = `<p>${data.hitokoto}</p><small>—— ${data.from}</small>`;
-                });
-
-            document.addEventListener('click', function(e) {
-                const effect = document.createElement('div');
-                effect.className = 'click-effect';
-                effect.style.left = e.pageX - 10 + 'px';
-                effect.style.top = e.pageY - 10 + 'px';
-                document.body.appendChild(effect);
-                setTimeout(() => effect.remove(), 600);
-            });
-            const countdownElement = document.getElementById('countdown');
-            const deadline = new Date(2026, 2, 27, 0, 0, 0);
-            function updateCountdown() {
-                const now = new Date();
-                let diff = deadline - now;
-                if (diff < 0) diff = 0;
-                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-                countdownElement.textContent = `剩余${days}天${hours}小时${minutes}分钟${seconds}秒`;
-            }
-            updateCountdown();
-            setInterval(updateCountdown, 1000);
-
-            const today = new Date();
-            if(today.getMonth() === 2 && today.getDate() === 27) {
-                document.getElementById('birthdayOverlay').style.display = 'flex';
-            }
-
-            playBtn.addEventListener('click', () => {
-                if(audio.paused) {
-                    audio.play();
-                    playBtn.textContent = '⏸';
-                } else {
-                    audio.pause();
-                    playBtn.textContent = '▶';
-                }
-            });
-
-            audio.addEventListener('timeupdate', () => {
-                const progress = (audio.currentTime / audio.duration) * 100;
-                progressBar.style.width = `${progress}%`;
-                const formatTime = (seconds) => {
-                    const mins = Math.floor(seconds / 60);
-                    const secs = Math.floor(seconds % 60);
-                    return `${mins}:${secs.toString().padStart(2, '0')}`;
-                }
-                timeDisplay.textContent = `${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`;
-            });
-
-            progressContainer.addEventListener('click', (e) => {
-                const rect = progressContainer.getBoundingClientRect();
-                const pos = (e.clientX - rect.left) / rect.width;
-                audio.currentTime = pos * audio.duration;
-            });
-
-            volumeSlider.addEventListener('input', (e) => {
-                audio.volume = e.target.value;
-            });
-
-            audio.addEventListener('loadedmetadata', () => {
-                const formatTime = (seconds) => {
-                    const mins = Math.floor(seconds / 60);
-                    const secs = Math.floor(seconds % 60);
-                    return `${mins}:${secs.toString().padStart(2, '0')}`;
-                }
-                timeDisplay.textContent = `0:00 / ${formatTime(audio.duration)}`;
-            });
-
-            audio.addEventListener('error', () => {
-                timeDisplay.textContent = '音乐加载失败';
-            });
-        });
-
-        function showModal() {
-            document.getElementById('aboutModal').style.display = 'block';
-        }
-
-        function hideModal() {
-            document.getElementById('aboutModal').style.display = 'none';
-        }
-
-        function closeBirthday() {
-            document.getElementById('birthdayOverlay').style.display = 'none';
-        }
-
-        const style = document.createElement('style');
-        style.textContent = `@keyframes sparkle {
-            0% { opacity: 1; transform: rotate(0deg); }
-            25% { opacity: 0.8; transform: rotate(10deg); }
-            50% { opacity: 1; transform: rotate(-10deg); }
-            75% { opacity: 0.8; transform: rotate(5deg); }
-            100% { opacity: 1; transform: rotate(0deg); }
-        }`;
-        document.head.appendChild(style);
-    </script>
+    
+    function showBirthdayPopup(){
+      const now = new Date();
+      if (now.getMonth() === 2 && now.getDate() === 27){
+        const is2026 = now.getFullYear() === 2026;
+        const msg = is2026 ? '🎂 闪电，18岁生日快乐！愿前程似锦，所愿皆成！' : '🎂 闪电，生日快乐！';
+        const modal = document.getElementById('aboutModal');
+        const original = modal.innerHTML;
+        modal.innerHTML = `<h3>生日快乐</h3><p style=\"line-height:1.8\">${msg}</p><div class=\"actions\"><button class=\"btn\" id=\"birthdayClose\">谢谢</button></div>`;
+        backdrop.style.display = 'flex';
+        document.getElementById('birthdayClose').addEventListener('click', ()=>{ backdrop.style.display = 'none'; modal.innerHTML = original; const cb = document.getElementById('closeAbout'); if (cb) cb.addEventListener('click', closeModal); });
+      }
+    }
+    showBirthdayPopup();
+  </script>
 </body>
 </html>
