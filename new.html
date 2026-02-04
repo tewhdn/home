@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>闪电的个人主页</title>
+    <style>
+        :root {
+            /* 品牌色定义 */
+            --xiaomi-orange: #ff6900;
+            --bili-pink: #fb7299;
+            --qq-blue: #12b7f5;
+            --bg-dark: #0f172a;
+            --glass-bg: rgba(30, 41, 59, 0.75);
+            --border-light: rgba(255, 255, 255, 0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'sf pro display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--bg-dark);
+            /* 更深邃的背景光 */
+            background-image: 
+                radial-gradient(at 10% 20%, hsla(263, 53%, 19%, 0.6) 0, transparent 50%), 
+                radial-gradient(at 90% 80%, hsla(328, 61%, 23%, 0.6) 0, transparent 50%), 
+                radial-gradient(at 50% 50%, hsla(225, 39%, 14%, 1) 0, transparent 60%);
+            color: white;
+            padding: 20px;
+            overflow: hidden; /* 防止滚动条闪烁 */
+        }
+
+        /* --- 灵动岛核心样式 Start --- */
+        .island-container {
+            position: fixed;
+            top: 15px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            z-index: 1000;
+            pointer-events: none; /* 平时不阻挡点击 */
+        }
+
+        .dynamic-island {
+            background: #000000;
+            color: #fff;
+            border-radius: 35px;
+            /* 初始状态：小圆点，透明 */
+            height: 35px;
+            width: 35px; 
+            min-width: 35px;
+            opacity: 0;
+            transform: scale(0.8);
+            
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+            
+            /* 核心：弹性物理动画曲线 */
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        /* 激活状态：展开 */
+        .dynamic-island.active {
+            opacity: 1;
+            transform: scale(1);
+            height: 46px;
+            width: auto; /* 宽度自适应内容 */
+            min-width: 180px;
+            max-width: 90%;
+            padding: 0 25px;
+        }
+
+        .island-content {
+            white-space: nowrap;
+            font-size: 15px;
+            font-weight: 500;
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 0.3s ease;
+            /* 文字延迟显示，配合岛的展开 */
+            transition-delay: 0.1s; 
+        }
+        .dynamic-island.active .island-content {
+            opacity: 1;
+            transform: scale(1);
+        }
+        /* --- 灵动岛核心样式 End --- */
+
+
+        /* 主容器优化：果冻弹跳入场 */
+        .container {
+            width: 100%;
+            max-width: 400px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(24px) saturate(120%);
+            -webkit-backdrop-filter: blur(24px) saturate(120%);
+            border: 1px solid var(--border-light);
+            border-radius: 30px;
+            padding: 45px 25px 35px;
+            text-align: center;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+            position: relative;
+            animation: jellyPop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+        }
+        @keyframes jellyPop { 
+            0% { opacity: 0; transform: scale(0.9) translateY(40px); } 
+            100% { opacity: 1; transform: scale(1) translateY(0); } 
+        }
+
+        /* 头像优化：持续慢转 + 悬停加速 */
+        .avatar-box { position: relative; width: 100px; height: 100px; margin: 0 auto 20px; }
+        .avatar {
+            width: 100%; height: 100%; border-radius: 50%;
+            border: 3px solid rgba(255,255,255,0.15);
+            /* 默认慢速旋转 */
+            animation: spin 20s linear infinite;
+        }
+        .avatar-box:hover .avatar {
+            /* 悬停加速 */
+            animation-duration: 2s;
+            border-color: var(--bili-pink);
+            box-shadow: 0 0 20px rgba(251, 114, 153, 0.4);
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .status-dot {
+            position: absolute; bottom: 2px; right: 2px; width: 18px; height: 18px;
+            background: #10b981; border: 3px solid var(--bg-dark); border-radius: 50%;
+            box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3);
+        }
+
+        h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.5px;}
+        .bio { font-size: 0.9rem; color: #94a3b8; margin-bottom: 30px; height: 1.5em; font-weight: 500; }
+
+        /* 进度条优化 */
+        .progress-box {
+            background: rgba(0,0,0,0.3); padding: 16px; border-radius: 18px;
+            margin-bottom: 30px; text-align: left;
+            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.2);
+        }
+        .progress-info { display: flex; justify-content: space-between; font-size: 0.75rem; color: #cbd5e1; margin-bottom: 10px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase;}
+        .progress-track { height: 14px; background: rgba(255,255,255,0.08); border-radius: 7px; overflow: hidden; }
+        .progress-fill {
+            height: 100%; width: 0%; border-radius: 7px;
+            background: linear-gradient(90deg, var(--xiaomi-orange), var(--bili-pink));
+            position: relative; transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        /* 进度条光效增强 */
+        .progress-fill::after {
+            content: ''; position: absolute; top:0; left:0; right:0; bottom:0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: shimmer 2s infinite;
+        }
+        @keyframes shimmer { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
+        .uptime-text { margin-top: 8px; font-size: 0.7rem; color: #64748b; text-align: right; font-family: monospace;}
+
+        /* 按钮组优化：更柔和的光晕 */
+        .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px; }
+        .btn {
+            border: none; padding: 14px; border-radius: 16px;
+            color: white; font-weight: 600; font-size: 0.9rem;
+            cursor: pointer; text-decoration: none;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            position: relative; overflow: hidden;
+            backdrop-filter: blur(5px);
+        }
+        
+        .btn-movie { background: rgba(59, 130, 246, 0.15); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.2); }
+        .btn-movie:hover { background: #3b82f6; color: white; box-shadow: 0 8px 20px -5px rgba(59, 130, 246, 0.6); transform: translateY(-3px); }
+
+        .btn-acc { background: rgba(168, 85, 247, 0.15); color: #d8b4fe; border: 1px solid rgba(168, 85, 247, 0.2); }
+        .btn-acc:hover { background: #a855f7; color: white; box-shadow: 0 8px 20px -5px rgba(168, 85, 247, 0.6); transform: translateY(-3px); }
+
+        .btn-donate { background: rgba(244, 63, 94, 0.15); color: #fda4af; border: 1px solid rgba(244, 63, 94, 0.2); }
+        .btn-donate:hover { background: #f43f5e; color: white; box-shadow: 0 8px 20px -5px rgba(244, 63, 94, 0.6); transform: translateY(-3px); }
+
+        .btn-about { background: rgba(34, 197, 94, 0.15); color: #86efac; border: 1px solid rgba(34, 197, 94, 0.2); }
+        .btn-about:hover { background: #22c55e; color: white; box-shadow: 0 8px 20px -5px rgba(34, 197, 94, 0.6); transform: translateY(-3px); }
+
+        /* 设备栏优化 */
+        .devices { background: rgba(0,0,0,0.25); border-radius: 16px; padding: 18px; margin-bottom: 25px; text-align: left; border: 1px solid rgba(255,255,255,0.03);}
+        .devices h3 { font-size: 0.75rem; color: #64748b; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+        .device-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 0.85rem; }
+        .device-item { display: flex; align-items: center; gap: 8px; color: #e2e8f0; font-weight: 500;}
+        .icon-xiaomi { color: var(--xiaomi-orange); }
+
+        /* 社交栏优化 */
+        .social { display: flex; justify-content: center; gap: 15px; }
+        .social a {
+            width: 48px; height: 48px; border-radius: 50%;
+            background: rgba(255,255,255,0.03);
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        .social a svg { width: 24px; height: 24px; fill: #94a3b8; transition: fill 0.3s; }
+        .social a:hover { transform: scale(1.1) rotate(10deg); background: white; border-color: white; }
+        .social a.qq:hover svg { fill: var(--qq-blue); }
+        .social a.mail:hover svg { fill: #EA4335; }
+        .social a.bili:hover svg { fill: var(--bili-pink); }
+
+    </style>
+</head>
+<body>
+
+    <div class="island-container">
+        <div id="dynamicIsland" class="dynamic-island">
+            <span class="island-content" id="islandText"></span>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="avatar-box">
+            <img src="https://q1.qlogo.cn/g?b=qq&nk=2932944216&s=100" class="avatar" alt="头像">
+            <div class="status-dot"></div>
+        </div>
+
+        <h1>闪电的个人主页</h1>
+        <div class="bio" id="typewriter"></div>
+
+        <div class="progress-box">
+            <div class="progress-info">
+                <span>人生进度</span>
+                <span id="percent-text">loading...</span>
+            </div>
+            <div class="progress-track">
+                <div class="progress-fill" id="progress-bar"></div>
+            </div>
+            <div class="uptime-text" id="uptime-detail"></div>
+        </div>
+
+        <div class="btn-group">
+            <a href="http://tv.shandiana.cn" target="_blank" class="btn btn-movie">⚡ 闪电影视</a>
+            <a href="http://gxzh.shandiana.cn" target="_blank" class="btn btn-acc">🔄 共享账号</a>
+            <button class="btn btn-donate" onclick="triggerIsland('💖 谢谢，留给你自己用吧 ')">
+                💖 赞助我
+            </button>
+            <button class="btn btn-about" onclick="triggerIsland('🤔 高中生，爱玩 MC，米粉一个 ')">
+                🤔 关于我
+            </button>
+        </div>
+
+        <div class="devices">
+            <h3>我的设备</h3>
+            <div class="device-grid">
+                <div class="device-item"><span class="icon-xiaomi">📱</span> Redmi K70e</div>
+                <div class="device-item"><span class="icon-xiaomi">⌚</span> Redmi Watch 6</div>
+                <div class="device-item"><span>🎧</span> AirPods Pro</div>
+                <div class="device-item"><span>🔋</span> Xiaomi Power Bank</div>
+            </div>
+        </div>
+
+        <div class="social">
+            <a href="tencent://message/?uin=2932944216" class="qq">
+                <svg viewBox="0 0 1024 1024"><path d="M824.8 613.2c-16-51.4-34.4-94.6-62.7-165.3C766.5 262.2 689.3 112 511.5 112 331.7 112 256.2 265.2 261 447.9c-28.4 70.8-46.7 113.7-62.7 165.3-34 109.5-23 154.8-14.6 155.8 18 2.2 70.1-82.4 70.1-82.4 0 49 25.2 112.9 79.8 159-26.4 8.1-85.7 29.9-71.6 53.8 11.4 19.3 196.2 12.3 249.5 6.3 53.3 6 238.1 13 249.5-6.3 14.1-23.8-45.3-45.7-71.6-53.8 54.6-46.2 79.8-110.1 79.8-159 0 0 52.1 84.6 70.1 82.4 8.5-1.1 19.5-46.4-14.5-155.8z"/></svg>
+            </a>
+            <a href="mailto:2932944216@qq.com" class="mail">
+                <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+            </a>
+            <a href="https://m.bilibili.com/space/1675718825" target="_blank" class="bili">
+                <svg viewBox="0 0 1024 1024"><path d="M777.5 131.7a53.3 53.3 0 0 1 0 75.4L728.7 255.8h49.9A160 160 0 0 1 938.7 415.8v320a160 160 0 0 1-160 160H245.3a160 160 0 0 1-160-160v-320a160 160 0 0 1 160-160h49.7L246.4 207.1a53.3 53.3 0 1 1 75.4-75.4l81.9 81.9h216.6l81.9-81.9a53.3 53.3 0 0 1 75.3 0z m0 230.8H245.3a53.3 53.3 0 0 0-53.3 53.3v320a53.3 53.3 0 0 0 53.3 53.3h533.3a53.3 53.3 0 0 0 53.3-53.3v-320a53.3 53.3 0 0 0-53.3-53.3zM341.3 469.3a53.3 53.3 0 1 1 0 106.7 53.3 53.3 0 0 1 0-106.7z m341.3 0a53.3 53.3 0 1 1 0 106.7 53.3 53.3 0 0 1 0-106.7z"/></svg>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        
+        const text = "HTML / CSS / JS / Minecraft / 米粉";
+        let i = 0;
+        function typeWriter() {
+            if (i < text.length) {
+                document.getElementById("typewriter").innerHTML += text.charAt(i);
+                i++;
+                setTimeout(typeWriter, 60);
+            }
+        }
+        typeWriter();
+
+        
+        function updateLife() {
+            const birth = new Date("2008-03-27"); 
+            const now = new Date();
+            const endYear = 100; 
+            const end = new Date(birth.getFullYear() + endYear, birth.getMonth(), birth.getDate());
+            const totalDuration = end - birth;
+            const currentDuration = now - birth;
+            let percent = (currentDuration / totalDuration) * 100;
+            const yearsOld = now.getFullYear() - birth.getFullYear();
+            
+            document.getElementById("progress-bar").style.width = percent + "%";
+            document.getElementById("percent-text").innerText = percent.toFixed(5) + "%";
+            const daysRun = Math.floor(currentDuration / (1000 * 60 * 60 * 24));
+            document.getElementById("uptime-detail").innerText = `已加载资源 ${yearsOld} 年 (${daysRun} 天)`;
+        }
+        setInterval(updateLife, 100);
+        updateLife();
+
+        
+        let islandTimer;
+        const island = document.getElementById('dynamicIsland');
+        const islandText = document.getElementById('islandText');
+
+        function triggerIsland(msg) {
+            
+            if(islandTimer) clearTimeout(islandTimer);
+
+            
+            islandText.innerText = msg;
+            
+            
+            requestAnimationFrame(() => {
+                island.classList.add('active');
+            });
+
+            
+            islandTimer = setTimeout(() => {
+                island.classList.remove('active');
+                
+                setTimeout(() => { if(!island.classList.contains('active')) islandText.innerText = ''; }, 500);
+            }, 3000); 
+        }
+    </script>
+</body>
+</html>
